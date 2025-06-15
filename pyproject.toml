@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "fastapi-zero"
+version = "0.1.0"
+description = ""
+authors = ["Wagner Diniz <wagner.diniz.barcellos@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11,<4.0"
+fastapi = {extras = ["standard"], version = "^0.115.12"}
+uvicorn = "^0.34.3"
+httpx = "^0.28.1"
+pydantic = "<2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.0"
+pytest-cov = "^6.2.1"
+httpx = "^0.28.1"
+ruff = "^0.11.13"
+taskipy = "^1.14.1"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+extend-exclude = ["migrations"]  # tests removido
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.taskipy.tasks]
+lint = "poetry run ruff check ."
+pre_format = "poetry run ruff check --fix ."
+format = "ruff format ."
+run = "fastapi dev fastapi_zero/app.py"
+pre_test = "task lint"
+teste = "pytest -s -x --cov=fastapi_zero -vv"
+post_test = "coverage html"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
